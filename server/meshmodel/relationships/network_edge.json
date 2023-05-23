@@ -9,9 +9,10 @@
 		"version": "v1.0.0",
 		"displayName": "Core",
 		"category": {
-      "name":"Cloud Native Application"
+      "name":"Cloud Native Application",
+      "metadata": null
     },
-    "metadata":null
+    "metadata": {}
   },
   "subType": "Network",
   "selectors": {
@@ -19,6 +20,10 @@
       "from": [
         {
           "kind": "Service",
+          "model": "Kubernetes"
+        },
+        {
+          "kind": "Ingress",
           "model": "Kubernetes"
         }
       ],
@@ -34,12 +39,34 @@
         {
           "kind": "Deployment",
           "model": "Kubernetes"
+        },
+        {
+          "kind": "Service",
+          "model": "Kubernetes"
         }
       ]
     },
     "deny": {
-      "from": [],
-      "deny": []
+      "from": [
+        {
+          "kind": "Ingress",
+          "model": "Kubernetes"
+        }
+      ],
+      "deny": [
+        {
+          "kind": "Endpoints",
+          "model": "Kubernetes"
+        },
+        {
+          "kind": "Pod",
+          "model": "Kubernetes"
+        },
+        {
+          "kind": "Deployment",
+          "model": "Kubernetes"
+        }
+      ]
     }
   }
 }

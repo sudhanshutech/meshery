@@ -138,6 +138,7 @@ function ThemeToggler({ theme, themeSetter, enqueueSnackbar, classes }) {
     theme === "light" ? themeSetter("dark")  : themeSetter("light");
   };
 
+
   return (
     <div onClick={themeToggler}>
       <Switch
@@ -151,7 +152,7 @@ function ThemeToggler({ theme, themeSetter, enqueueSnackbar, classes }) {
         checked={themeToggle}
         onChange={themeToggler}
       />{" "}
-      Dark Mode
+      {themeToggle ? "Light Mode" : "Dark Mode"}
     </div>
   );
 }

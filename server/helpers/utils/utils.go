@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -12,6 +13,12 @@ import (
 	"sync"
 
 	"github.com/layer5io/meshkit/models/meshmodel/core/v1alpha1"
+)
+
+const (
+	HelmChartURL          = "https://meshery.io/charts/"
+	HelmChartName         = "meshery"
+	HelmChartOperatorName = "meshery-operator"
 )
 
 // RecursiveCastMapStringInterfaceToMapStringInterface will convert a
@@ -151,20 +158,19 @@ func writeSVGHelper(metadata map[string]interface{}, dirname, filename string) {
 			if pathsvg != "" { // the image has already been loaded, point the component to that path
 				metadata["svgColor"] = pathsvg
 				goto White
-			} else {
-				f, err := os.Create(filepath.Join(path, filename+"-color.svg"))
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-				_, err = f.WriteString(x)
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-				metadata["svgColor"] = getRelativePathForAPI(filepath.Join(dirname, "color", filename+"-color.svg")) //Replace the actual SVG with path to SVG
-				writeHashCheckSVG(hashString, metadata["svgColor"].(string))
 			}
+			f, err := os.Create(filepath.Join(path, filename+"-color.svg"))
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			_, err = f.WriteString(x)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			metadata["svgColor"] = getRelativePathForAPI(filepath.Join(dirname, "color", filename+"-color.svg")) //Replace the actual SVG with path to SVG
+			writeHashCheckSVG(hashString, metadata["svgColor"].(string))
 		}
 	}
 White:
@@ -262,4 +268,30 @@ func SliceContains(elements []string, name string) bool {
 		}
 	}
 	return false
+}
+
+func GetPlatform() (string, error) {
+	platform := "Unknown Platform"
+
+	if _, err := os.Stat("/var/run/secrets/kubernetes.io/serviceaccount"); err == nil &&
+		os.Getenv("KUBERNETES_SERVICE_HOST") != "" &&
+		os.Getenv("KUBERNETES_SERVICE_PORT") != "" {
+		platform = "kubernetes"
+	} else if dockerHost := os.Getenv("DOCKER_HOST"); dockerHost != "" {
+		if u, err := url.Parse(dockerHost); err == nil {
+			switch u.Scheme {
+			case "unix":
+				if info, err := os.Stat(u.Path); err == nil && info.Mode()&os.ModeSocket != 0 {
+					platform = "docker"
+				}
+			case "tcp", "http", "https":
+				platform = "docker"
+			default:
+				platform = "Unknown Platform"
+			}
+		} else {
+			return "", err
+		}
+	}
+	return platform, nil
 }

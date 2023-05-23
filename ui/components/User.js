@@ -1,26 +1,26 @@
-import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import ExtensionPointSchemaValidator from '../utils/ExtensionPointSchemaValidator';
-import Link from "next/link";
-import { withRouter } from 'next/router';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { List, ListItem } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
-import { ListItem, List } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from "@material-ui/core/ListItemText";
-import Popper from '@material-ui/core/Popper';
-import Paper from '@material-ui/core/Paper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import IconButton from '@material-ui/core/IconButton';
+import ListItemText from "@material-ui/core/ListItemText";
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 import NoSsr from '@material-ui/core/NoSsr';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import { withStyles } from '@material-ui/core/styles';
 import CloseIcon from "@material-ui/icons/Close";
 import classNames from 'classnames';
+import Link from "next/link";
+import { withRouter } from 'next/router';
 import { withSnackbar } from "notistack";
-import { updateUser } from '../lib/store';
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import dataFetch from '../lib/data-fetch';
+import { updateUser } from '../lib/store';
+import ExtensionPointSchemaValidator from '../utils/ExtensionPointSchemaValidator';
 
 
 const styles = () => ({
